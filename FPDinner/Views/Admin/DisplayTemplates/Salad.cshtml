@@ -1,0 +1,5 @@
+﻿@model FPDinner.Models.Salad
+<li id="@string.Format("item{0}", Model.Id)">
+	<label class="checkbox">@Html.CheckBox("available") @Model.Name</label>
+	@Ajax.ActionLink("Delete", "DeleteSalad", new { id = Model.Id }, new AjaxOptions { OnSuccess = "$('#item" + Model.Id + "').remove()" })
+</li>

@@ -1,0 +1,39 @@
+﻿@model FPDinner.Models.AdminViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<section>
+@using (Html.BeginForm("StartBooking", "Admin")) { 
+	<section class="column">
+		<h2>Dinners</h2>
+
+		<ul id="dinners">
+			@Html.DisplayFor(m => m.Dinners)
+		</ul>
+	</section>
+
+	<section  class="column">
+		<h2>Salads</h2>
+		<ul id="salads">
+			@Html.DisplayFor(m => m.Salads)
+		</ul>
+	</section>
+
+	<p class="start-booking">
+		Mark what is available today and <input type="submit" value="start booking" />
+	</p>
+ }
+</section>
+
+<section>
+	<section class="column">
+		@Html.Partial("_AddDinner", new FPDinner.Models.Dinner())
+		@*@Html.EditorFor(m => m.NewDinner)*@
+	</section>
+
+	<section  class="column">
+		@Html.Partial("_AddSalad", new FPDinner.Models.Salad())
+	</section>
+</section>

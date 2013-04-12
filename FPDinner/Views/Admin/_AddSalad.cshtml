@@ -1,0 +1,18 @@
+﻿@model FPDinner.Models.Salad
+
+<h3>Add new</h3>
+@using (Ajax.BeginForm("AddSalad", new AjaxOptions { InsertionMode = InsertionMode.InsertAfter, UpdateTargetId = "salads"})) {
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Name)
+        @Html.ValidationMessageFor(model => model.Name)
+    </div>
+
+    <p>
+        <input type="submit" value="Add" />
+    </p>
+}

@@ -1,0 +1,21 @@
+﻿@model FPDinner.Models.Dinner
+
+<h3>Add new</h3>
+@using (Ajax.BeginForm("AddDinner", new AjaxOptions { InsertionMode = InsertionMode.InsertAfter, UpdateTargetId = "dinners"})) {
+    @Html.ValidationSummary(true)
+
+    <div class="editor-label">
+        @Html.LabelFor(model => model.Name)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.Name)
+        @Html.ValidationMessageFor(model => model.Name)
+    </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.HasPotatoes) @Html.LabelFor(model => model.HasPotatoes, new { @class = "checkbox" })
+    </div>
+
+    <p>
+        <input type="submit" value="Add" />
+    </p>
+}
