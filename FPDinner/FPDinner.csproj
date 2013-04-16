@@ -48,7 +48,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Raven.Abstractions">
+      <HintPath>..\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Embedded">
+      <HintPath>..\packages\RavenDB.Embedded.2.0.2330\lib\net40\Raven.Client.Embedded.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Client.Lightweight">
+      <HintPath>..\packages\RavenDB.Client.2.0.2330\lib\net40\Raven.Client.Lightweight.dll</HintPath>
+    </Reference>
+    <Reference Include="Raven.Database">
+      <HintPath>..\packages\RavenDB.Database.2.0.2330\lib\net40\Raven.Database.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Drawing" />
@@ -127,8 +140,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\HtmlPrefixScopeExtensions.cs" />
     <Compile Include="Models\Booking.cs" />
     <Compile Include="Models\Dinners.cs" />
+    <Compile Include="Models\SaladCounter.cs" />
+    <Compile Include="Models\DinnerIndex.cs" />
+    <Compile Include="Models\SaladIndex.cs" />
+    <Compile Include="Models\Summary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -242,13 +260,15 @@
     <Content Include="packages.config" />
     <None Include="readme.txt" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\Admin\DisplayTemplates\Dinner.cshtml" />
-    <Content Include="Views\Admin\DisplayTemplates\Salad.cshtml" />
+    <Content Include="Views\Admin\DisplayTemplates\DinnerAvailability.cshtml" />
+    <Content Include="Views\Admin\DisplayTemplates\SaladAvailability.cshtml" />
     <Content Include="Views\Admin\_AddedDinner.cshtml" />
     <Content Include="Views\Admin\_AddedSalad.cshtml" />
     <Content Include="Views\Admin\_AddDinner.cshtml" />
     <Content Include="Views\Admin\_AddSalad.cshtml" />
-    <Content Include="Views\Home\Order.cshtml" />
+    <Content Include="Views\Home\Order1.cshtml" />
+    <Content Include="Views\Home\Order2.cshtml" />
+    <Content Include="Views\Home\Summary.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

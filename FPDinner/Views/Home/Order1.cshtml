@@ -1,0 +1,91 @@
+﻿@using System.Collections.Generic
+@using FPDinner.Models
+@model OrderingViewModel
+@{
+    ViewBag.Title = "Dinner";
+    var potatoesList = new List<SelectListItem>
+    {
+        new SelectListItem { Text = Potatoes.Full.ToString(), Value = Potatoes.Full.ToString() },
+        new SelectListItem { Text = Potatoes.Half.ToString(), Value = Potatoes.Half.ToString() },
+        new SelectListItem { Text = Potatoes.None.ToString(), Value = Potatoes.None.ToString() }
+    };
+    var dinnersList = new SelectList(Model.Menu.Dinners, "Name", "Name");
+    var salads = new List<Salad> { null }.Concat(Model.Menu.Salads);
+    var saladList = new SelectList(salads, "Name", "Name", Model.Order.Salads[0]);
+    
+    
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title.</h1>
+                <h2>@Session["Message"]</h2>
+            </hgroup>
+            <p>
+                Now you can place your order.
+            </p>
+        </div>
+    </section>
+}
+@using(Html.BeginForm("order1", "home")){
+@Html.HiddenFor(m => m.Order.Id)
+@Html.HiddenFor(m => m.Order.MenuId)
+<ol class="round">
+    <li class="one">
+        @Html.LabelFor(m => m.Order.Dinner.Dinner)
+        @Html.DropDownListFor(m => m.Order.Dinner.Dinner, dinnersList, new { id = "dinner" })
+
+        <div id="potatoes-container">
+            @Html.LabelFor(m => m.Order.Dinner.Potatoes)
+            @(Html.DropDownListFor(m => m.Order.Dinner.Potatoes, potatoesList, new { id = "potatoes" }))
+        </div>
+
+        @Html.LabelFor(m => m.Order.Dinner.Notes)
+        @Html.EditorFor(m => m.Order.Dinner.Notes)
+
+        
+    </li>
+
+    <li class="two">
+        @Html.LabelFor(m => m.Order.Salads[0], "Salad")
+        @Html.DropDownListFor(m => m.Order.Salads[0], saladList)
+        @Html.HiddenFor(mbox => mbox.Order.Salads[1])
+    </li>
+
+    <li class="three">
+        <input type="submit" name="submit" value="Order!" />
+    </li>
+</ol>
+}
+@section scripts {
+<script type="text/javascript">
+    $(function () {
+        var $dinner = $("#dinner");
+        var $potatoesContainer = $("#potatoes-container");
+        var $potatoes = $("#potatoes");
+        
+        var togglePotatoes = function () {
+        	if(potatoes[$dinner.val()]) {
+        		$potatoesContainer.show();
+        	}
+        	else {
+        		$potatoes.val("");
+        		$potatoesContainer.hide();
+        	}
+        }
+
+        var potatoes = {
+            @foreach(var d in Model.Menu.Dinners) { 
+                @: "@d.Name": @(d.HasPotatoes.ToString().ToLower()),
+            }
+        }
+
+        $dinner.change(function (e) {
+            togglePotatoes();
+        });
+
+        togglePotatoes();
+    });
+</script>
+}

@@ -10,14 +10,14 @@
 		<h2>Dinners</h2>
 
 		<ul id="dinners">
-			@Html.DisplayFor(m => m.Dinners)
+			@foreach(var d in Model.Dinners) { @Html.DisplayFor(m => d, null, "") }
 		</ul>
 	</section>
 
 	<section  class="column">
 		<h2>Salads</h2>
 		<ul id="salads">
-			@Html.DisplayFor(m => m.Salads)
+			@foreach(var s in Model.Salads) { @Html.DisplayFor(m => s, null, "") }
 		</ul>
 	</section>
 
@@ -30,7 +30,6 @@
 <section>
 	<section class="column">
 		@Html.Partial("_AddDinner", new FPDinner.Models.Dinner())
-		@*@Html.EditorFor(m => m.NewDinner)*@
 	</section>
 
 	<section  class="column">

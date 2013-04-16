@@ -18,9 +18,21 @@ namespace FPDinner.Models
 		public string Name { get; set; }
 	}
 
+	public class DinnerAvailability
+	{
+		public Dinner Dinner { get; set; }
+		public bool IsAvailable { get; set; }
+	}
+
+	public class SaladAvailability
+	{
+		public Salad Salad { get; set; }
+		public bool IsAvailable { get; set; }
+	}
+
 	public class AdminViewModel
 	{
-		public IEnumerable<Dinner> Dinners { get; set; }
-		public IEnumerable<Salad> Salads { get; set; }
+		public IEnumerable<DinnerAvailability> Dinners { get; set; }
+		public IEnumerable<SaladAvailability> Salads { get; set; }
 	}
 }

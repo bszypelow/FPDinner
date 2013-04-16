@@ -16,7 +16,7 @@ namespace FPDinner.Models
 	public class Order
 	{
 		public int Id { get; set; }
-		public DateTime Date { get; set; }
+		public string MenuId { get; set; }
 		public string Person { get; set; }
 		public OrderedDinner Dinner { get; set; }
 		public string[] Salads { get; set; }

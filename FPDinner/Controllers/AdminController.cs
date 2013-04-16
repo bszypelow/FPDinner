@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FPDinner.Models;
+using Raven.Client;
 
 namespace FPDinner.Controllers
 {
@@ -15,28 +16,23 @@ namespace FPDinner.Controllers
 
         public ActionResult Index()
         {
-            var dinners = new List<Dinner>
+            using (IDocumentSession session = MvcApplication.DB.OpenSession())
             {
-                new Dinner { Id = 1, Name = "Pierogi", HasPotatoes = false},
-                new Dinner { Id = 2, Name = "Kotlet", HasPotatoes = true},
-                new Dinner { Id = 3, Name = "Placki", HasPotatoes = false},
-                new Dinner { Id = 4, Name = "Ryba", HasPotatoes = true},
-            };
+                var dinners = session.Query<Dinner>()
+                    .ToList()
+                    .Select(d => new DinnerAvailability { Dinner = d, IsAvailable = false });
+                var salads = session.Query<Salad>()
+                    .ToList()
+                    .Select(s => new SaladAvailability { Salad = s, IsAvailable = false });
 
-            var salads = new List<Salad>
-            {
-                new Salad { Id = 1, Name = "Biała"},
-                new Salad { Id = 2, Name = "Marchewka"},
-                new Salad { Id = 3, Name = "Czerwona"}
-            };
+                var viewModel = new AdminViewModel
+                {
+                    Dinners = dinners,
+                    Salads = salads,
+                };
 
-            var viewModel = new AdminViewModel
-            {
-                Dinners = dinners,
-                Salads = salads,
-            };
-
-            return View(viewModel);
+                return View(viewModel);
+            }
         }
 
         //
@@ -47,9 +43,16 @@ namespace FPDinner.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
+                if(TryValidateModel(model))
+                {
+                    using (IDocumentSession session = MvcApplication.DB.OpenSession())
+                    {
+                        session.Store(model);
+                        session.SaveChanges();
+                    }
+                }
 
-                return PartialView("_AddedDinner", model);
+                return PartialView("_AddedDinner", new DinnerAvailability { Dinner = model, IsAvailable = false });
             }
             catch (Exception ex)
             {
@@ -63,6 +66,13 @@ namespace FPDinner.Controllers
 
         public ActionResult DeleteDinner(int id)
         {
+            using (IDocumentSession session = MvcApplication.DB.OpenSession())
+            {
+                var dinner = session.Load<Dinner>("dinners/" + id.ToString());
+                session.Delete(dinner);
+                session.SaveChanges();
+            }
+
             return new EmptyResult();
         }
 
@@ -71,9 +81,16 @@ namespace FPDinner.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
+                if (TryValidateModel(model))
+                {
+                    using (IDocumentSession session = MvcApplication.DB.OpenSession())
+                    {
+                        session.Store(model);
+                        session.SaveChanges();
+                    }
+                }
 
-                return PartialView("_AddedSalad", model);
+                return PartialView("_AddedSalad", new SaladAvailability { Salad = model, IsAvailable = false });
             }
             catch (Exception ex)
             {
@@ -87,14 +104,42 @@ namespace FPDinner.Controllers
 
         public ActionResult DeleteSalad(int id)
         {
-            return View();
+            using (IDocumentSession session = MvcApplication.DB.OpenSession())
+            {
+                var dinner = session.Load<Salad>("salads/" + id.ToString());
+                session.Delete(dinner);
+                session.SaveChanges();
+            }
+            return new EmptyResult();
         }
 
         //
         // GET: /Admin/StartBooking
 
-        public ActionResult StartBooking()
+        public ActionResult StartBooking(AdminViewModel model)
         {
+            using (IDocumentSession session = MvcApplication.DB.OpenSession())
+            {
+                var dinners = from d in session.Query<Dinner>().ToList()
+                              join dd in model.Dinners on d.Id equals dd.Dinner.Id
+                              where dd.IsAvailable == true
+                              select d;
+
+                var salads = from s in model.Salads
+                             where s.IsAvailable
+                             select s.Salad;
+                
+                var menu = new Menu
+                {
+                    Date = DateTime.UtcNow,
+                    Dinners = dinners,
+                    Salads = salads
+                };
+
+                session.Store(menu);
+                session.SaveChanges();
+            }
+
             return RedirectToAction("Index", "Home");
         }
     }

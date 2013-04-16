@@ -1,0 +1,37 @@
+﻿@using System.Collections.Generic
+@using FPDinner.Models
+@model OrderingViewModel
+@{
+    ViewBag.Title = "Dinner";
+    var salads = new List<Salad> { null }.Concat(Model.Menu.Salads);
+    var saladList = new SelectList(salads, "Name", "Name", Model.Order.Salads[1]);
+}
+@section featured {
+    <section class="featured">
+        <div class="content-wrapper">
+            <hgroup class="title">
+                <h1>@ViewBag.Title.</h1>
+                <h2>@ViewBag.Message</h2>
+            </hgroup>
+            <p>
+                Now you can place your order for additional salad.
+            </p>
+        </div>
+    </section>
+}
+@using(Html.BeginForm("order2", "home")){
+@Html.HiddenFor(m => m.Order.Id)
+@Html.HiddenFor(m => m.Order.MenuId)
+<ol class="round">
+
+    <li class="two">
+        @Html.HiddenFor(m=> m.Order.Salads[0])
+        @Html.LabelFor(m => m.Order.Salads[1], "Salad")
+        @Html.DropDownListFor(m => m.Order.Salads[1], saladList)
+    </li>
+
+    <li class="three">
+        <input type="submit" name="submit" value="Order!" />
+    </li>
+</ol>
+}

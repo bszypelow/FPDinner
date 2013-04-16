@@ -3,12 +3,6 @@
 @model OrderingViewModel
 @{
     ViewBag.Title = "Dinner";
-    var potatoesList = new List<SelectListItem>
-    {
-        new SelectListItem { Text = Potatoes.Full.ToString(), Value = Potatoes.Full.ToString() },
-        new SelectListItem { Text = Potatoes.Half.ToString(), Value = Potatoes.Half.ToString() },
-        new SelectListItem { Text = Potatoes.None.ToString(), Value = Potatoes.None.ToString() }
-    };
     
 }
 @section featured {
@@ -19,60 +13,9 @@
                 <h2>@ViewBag.Message</h2>
             </hgroup>
             <p>
-                Now you can place your order.
+                Time elapsed!
             </p>
         </div>
     </section>
 }
-@using(Html.BeginForm("order", "home")){
-<ol class="round">
-    <li class="one">
-        @Html.LabelFor(m => m.Order.Dinner.Dinner)
-        @Html.DropDownListFor(m => m.Order.Dinner.Dinner, new SelectList(Model.Menu.Dinners, "Name", "Name"), new { id = "dinner" })
 
-		<div id="potatoes">
-			@Html.LabelFor(m => m.Order.Dinner.Potatoes)
-			@(Html.DropDownListFor(m => m.Order.Dinner.Potatoes, potatoesList))
-		</div>
-
-        @Html.LabelFor(m => m.Order.Dinner.Notes)
-        @Html.EditorFor(m => m.Order.Dinner.Notes)
-
-        
-    </li>
-
-    <li class="two">
-        @Html.LabelFor(m => m.Order.Salads[0])
-        @Html.DropDownListFor(m => m.Order.Salads[0], new SelectList(Model.Menu.Salads, "Name", "Name"))
-    </li>
-
-    <li class="three">
-        <input type="submit" name="submit" value="Order!" />
-    </li>
-</ol>
-}
-@section scripts {
-<script type="text/javascript">
-	$(function () {
-		var $dinner = $("#dinner");
-		var $potatoes = $("#potatoes");
-		
-		var togglePotatoes = function () {
-			if(potatoes[$dinner.val()]) $potatoes.show();
-			else $potatoes.hide();
-		}
-
-		var potatoes = {
-			@foreach(var d in Model.Menu.Dinners) { 
-				@: "@d.Name": @(d.HasPotatoes.ToString().ToLower()),
-			}
-		}
-
-		$dinner.change(function (e) {
-			togglePotatoes();
-		});
-
-
-	});
-</script>
-}

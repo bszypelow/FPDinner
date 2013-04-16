@@ -1,0 +1,53 @@
+﻿@model FPDinner.Models.SummaryViewModel
+
+@{
+    ViewBag.Title = "Summary";
+}
+
+<h2>Summary</h2>
+
+<table>
+    <tr>
+        <th>Dinner</th>
+        <th>Potatoes</th>
+        <th>Notes</th>
+        <th>Count</th>
+    </tr>
+
+@foreach (var item in Model.Dinners) {
+    <tr>
+        <td>
+            @item.Dinner
+        </td>
+        <td>
+            @(Enum.GetName(typeof(FPDinner.Models.Potatoes),item.Potatoes))
+        </td>
+        <td>
+            @item.Notes
+        </td>
+        <td>
+            @item.Count
+        </td>
+    </tr>
+}
+
+</table>
+
+<table>
+    <tr>
+        <th>Salad</th>
+        <th>Count</th>
+    </tr>
+
+@foreach (var item in Model.Salads) {
+    <tr>
+        <td>
+            @item.Salad
+        </td>
+        <td>
+            @item.Count
+        </td>
+    </tr>
+}
+
+</table>

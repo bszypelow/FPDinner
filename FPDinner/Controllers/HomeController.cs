@@ -4,7 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using FPDinner.Models;
-
+using Raven.Client;
+using Raven.Database.Linq;
+using Raven.Database.Queries;
 namespace FPDinner.Controllers
 {
     [Authorize]
@@ -12,40 +14,137 @@ namespace FPDinner.Controllers
     {
         public ActionResult Index()
         {
-            var menu = new Menu
+            using (var session = MvcApplication.DB.OpenSession())
             {
-                Id = 1,
-                Date = DateTime.UtcNow,
-                Dinners = new List<Dinner>
+                var menu = GetMenu(session);
+                if (menu == null)
                 {
-                    new Dinner { Id = 1, Name = "Pierogi", HasPotatoes = false},
-                    new Dinner { Id = 2, Name = "Kotlet", HasPotatoes = true},
-                    new Dinner { Id = 3, Name = "Placki", HasPotatoes = false},
-                    new Dinner { Id = 3, Name = "Ryba", HasPotatoes = true},
-                },
-                Salads = new List<Salad>
-                {
-                    new Salad { Id = 1, Name = "Biała"},
-                    new Salad { Id = 1, Name = "Marchewka"},
-                    new Salad { Id = 1, Name = "Czerwona"}
+                    return RedirectToAction("index", "admin");
                 }
-            };
 
-            var order = new Order
-            {
-                Date = DateTime.Now,
-                Dinner = new OrderedDinner(),
-                Salads = new string[2]
-            };
-            return View(new OrderingViewModel { Menu = menu, Order = order });
+                string menuId = "menus/" + menu.Id.ToString();
+                DateTime timeLimit = DateTime.UtcNow.AddMinutes(-1);
+
+                var order = GetOrCreateOrder(session, menuId);
+
+                var viewModel = new OrderingViewModel
+                {
+                    Menu = menu,
+                    Order = order
+                };
+
+                if (menu.Date > timeLimit)
+                {
+                    return View("order1", viewModel);
+                }
+
+                if (CountMissingSalads(session, menuId) > 0)
+                {
+                    return View("order2", viewModel);
+                }
+
+                return View();
+            }
         }
 
         [HttpPost]
-        public ActionResult Order(OrderingViewModel model)
+        public ActionResult Order1(OrderingViewModel model)
         {
-            //TODO: Add logic here
+            using (var session = MvcApplication.DB.OpenSession())
+            {
+                var order = model.Order;
+                order.Person = User.Identity.Name;
+
+                if (TryValidateModel(order))
+                {
+                    session.Store(model.Order);
+                    session.SaveChanges();
+                }
+            }
+
+            Session["Message"] = " Order placed.";
+            return RedirectToAction("index");
+        }
+
+        [HttpPost]
+        public ActionResult Order2(OrderingViewModel model)
+        {
+            using (var session = MvcApplication.DB.OpenSession())
+            {
+                var order = session.Load<Order>("orders/" + model.Order.Id);
+                order.Salads[1] = model.Order.Salads[1];
+
+                if (TryValidateModel(order))
+                {
+                    session.Store(order);
+                    session.SaveChanges();
+                }
+            }
 
             return RedirectToAction("index");
         }
+
+        public ActionResult Summary()
+        {
+            using (var session = MvcApplication.DB.OpenSession())
+            {
+                var menu = GetMenu(session);
+                string id = "menus/" + menu.Id;
+
+                var dinners = from d in session.Query<DinnerSummary, DinnerIndex>()
+                              where d.MenuId == id
+                              select d;
+                var salads = from s in session.Query<SaladSummary, SaladIndex>()
+                             where s.MenuId == id
+                             select s;
+
+                return View(new SummaryViewModel { Dinners = dinners, Salads = salads });
+            }
+        }
+
+        #region Data Access Helpers
+
+        private static Menu GetMenu(IDocumentSession session)
+        {
+            var menu = session.Query<Menu>()
+                .Customize(q => q.WaitForNonStaleResults(TimeSpan.FromSeconds(2)))
+                .OrderByDescending(m => m.Date)
+                .FirstOrDefault();
+            return menu;
+        }
+
+        private Order GetOrCreateOrder(IDocumentSession session, string menuId)
+        {
+            string user = User.Identity.Name;
+
+            var myOrders = from o in session.Query<Order>()
+                           where o.Person == user
+                           where o.MenuId == menuId
+                           select o;
+
+            var order = myOrders.FirstOrDefault() ?? new Order
+            {
+                MenuId = menuId,
+                Dinner = new OrderedDinner(),
+                Salads = new string[] { string.Empty, string.Empty }
+            };
+
+            return order;
+        }
+
+        private static int CountMissingSalads(IDocumentSession session, string menuId)
+        {
+            var orders = from o in session.Query<Order>()
+                         where o.MenuId == menuId
+                         select o;
+            var saladsCount = from c in session.Query<SaladCounter.Result, SaladCounter>()
+                              where c.MenuId == menuId
+                              select c.SaladCount;
+            var missingSalads = orders.Count() - saladsCount.FirstOrDefault();
+
+            return missingSalads;
+        }
     }
+
+    #endregion
 }
