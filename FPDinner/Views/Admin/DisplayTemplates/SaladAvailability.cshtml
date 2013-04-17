@@ -1,8 +1,8 @@
 ﻿@model FPDinner.Models.SaladAvailability
-<li id="@string.Format("item{0}", Model.Salad.Id)">
+<li id="@string.Format("salad-item{0}", Model.Salad.Id)">
 @using (Html.BeginCollectionItemFor<FPDinner.Models.AdminViewModel>(m => m.Salads)) {
 	@Html.HiddenFor(m => m.Salad.Name)
 	<label class="checkbox">@Html.CheckBoxFor(m => m.IsAvailable) @Model.Salad.Name</label>
-	@Ajax.ActionLink("Delete", "DeleteSalad", new { id = Model.Salad.Id }, new AjaxOptions { OnSuccess = "$('#item" + Model.Salad.Id + "').remove()" })
+	@Ajax.ActionLink("Delete", "DeleteSalad", new { id = Model.Salad.Id }, new AjaxOptions { OnSuccess = "$('#salad-item" + Model.Salad.Id + "').remove()" })
 }
 </li>
