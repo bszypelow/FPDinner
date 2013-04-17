@@ -41,24 +41,16 @@ namespace FPDinner.Controllers
         [HttpPost]
         public ActionResult AddDinner(Dinner model)
         {
-            try
+            if(TryValidateModel(model))
             {
-                if(TryValidateModel(model))
+                using (IDocumentSession session = MvcApplication.DB.OpenSession())
                 {
-                    using (IDocumentSession session = MvcApplication.DB.OpenSession())
-                    {
-                        session.Store(model);
-                        session.SaveChanges();
-                    }
+                    session.Store(model);
+                    session.SaveChanges();
                 }
+            }
 
-                return PartialView("_AddedDinner", new DinnerAvailability { Dinner = model, IsAvailable = false });
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Message = ex.Message;
-                return PartialView("Error");
-            }
+            return PartialView("_AddedDinner", new DinnerAvailability { Dinner = model, IsAvailable = false });
         }
 
         //
@@ -79,24 +71,16 @@ namespace FPDinner.Controllers
         [HttpPost]
         public ActionResult AddSalad(Salad model)
         {
-            try
+            if (TryValidateModel(model))
             {
-                if (TryValidateModel(model))
+                using (IDocumentSession session = MvcApplication.DB.OpenSession())
                 {
-                    using (IDocumentSession session = MvcApplication.DB.OpenSession())
-                    {
-                        session.Store(model);
-                        session.SaveChanges();
-                    }
+                    session.Store(model);
+                    session.SaveChanges();
                 }
+            }
 
-                return PartialView("_AddedSalad", new SaladAvailability { Salad = model, IsAvailable = false });
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Message = ex.Message;
-                return PartialView("Error");
-            }
+            return PartialView("_AddedSalad", new SaladAvailability { Salad = model, IsAvailable = false });
         }
 
         //

@@ -117,7 +117,7 @@ namespace FPDinner.Controllers
         {
             string user = User.Identity.Name;
 
-            var myOrders = from o in session.Query<Order>()
+            var myOrders = from o in session.Query<Order>().Customize(q => q.WaitForNonStaleResults(TimeSpan.FromSeconds(2)))
                            where o.Person == user
                            where o.MenuId == menuId
                            select o;

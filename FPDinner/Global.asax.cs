@@ -18,7 +18,8 @@ namespace FPDinner
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        public static IDocumentStore DB = new EmbeddableDocumentStore { DataDirectory = "App_Data" };
+        public static IDocumentStore DB =
+            new EmbeddableDocumentStore { DataDirectory = "App_Data" };
 
         protected void Application_Start()
         {

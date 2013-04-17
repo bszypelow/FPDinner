@@ -24,13 +24,13 @@
 @Html.HiddenFor(m => m.Order.MenuId)
 <ol class="round">
 
-    <li class="two">
+    <li class="one">
         @Html.HiddenFor(m=> m.Order.Salads[0])
         @Html.LabelFor(m => m.Order.Salads[1], "Salad")
         @Html.DropDownListFor(m => m.Order.Salads[1], saladList)
     </li>
 
-    <li class="three">
+    <li class="two">
         <input type="submit" name="submit" value="Order!" />
     </li>
 </ol>
