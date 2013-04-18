@@ -1,4 +1,12 @@
-﻿In order to use the Intranet template, you'll need to enable Windows authentication
+﻿Aplikacja demonstracyjna do wykładu RavenDB - nie tylko SQL, której celem jest przedstawienie podstawowych koncepcji i sposobów użycia dokumentowej bazy danych.
+
+Uwaga: Tego demo nie należy traktować jako gotowej aplikacji nadającej się do pracy w środowisku produkcyjnym. W szczeglności:
+1. Zupełnie pominięto walidację danych wejściowych i obsługę wyjątków.
+2. Brakuje reguł autoryzacyjnych.
+3. Nie ma żadnych testów automatycznych.
+
+
+In order to use the Intranet template, you'll need to enable Windows authentication
 and disable Anonymous authentication.
 
 IIS 7 & IIS 8
