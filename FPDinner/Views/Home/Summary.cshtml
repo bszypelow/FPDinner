@@ -9,9 +9,10 @@
 <table>
     <tr>
         <th>Dinner</th>
-        <th>Potatoes</th>
-        <th>Notes</th>
-        <th>Count</th>
+        <th>Full</th>
+        <th>Half</th>
+        <th>None</th>
+        <th>Total</th>
     </tr>
 
 @foreach (var item in Model.Dinners) {
@@ -20,13 +21,16 @@
             @item.Dinner
         </td>
         <td>
-            @(Enum.GetName(typeof(FPDinner.Models.Potatoes),item.Potatoes))
+            @if (item.HasPotatoes) { @item.Full }
         </td>
         <td>
-            @item.Notes
+            @if (item.HasPotatoes) { @item.Half }
         </td>
         <td>
-            @item.Count
+            @if (item.HasPotatoes) { @item.None }
+        </td>
+        <td>
+            <strong>@item.Total</strong>
         </td>
     </tr>
 }
@@ -46,6 +50,43 @@
         </td>
         <td>
             @item.Count
+        </td>
+    </tr>
+}
+
+</table>
+
+<h2>Details</h2>
+
+<table>
+    <tr>
+        <th>Person</th>
+        <th>Dinner</th>
+        <th>Potatoes</th>
+        <th>Notes</th>
+        <th>Salad 1</th>
+        <th>Salad 2</th>
+    </tr>
+
+@foreach (var item in Model.Details) {
+    <tr>
+        <td>
+            @item.Person
+        </td>
+        <td>
+            @item.Dinner.Dinner
+        </td>
+        <td>
+            @(Enum.GetName(typeof(FPDinner.Models.Potatoes), item.Dinner.Potatoes))
+        </td>
+        <td>
+            @item.Dinner.Notes
+        </td>
+        <td>
+            @item.Salads[0]
+        </td>
+        <td>
+            @if (item.Salads.Length == 2) { @item.Salads[1] }
         </td>
     </tr>
 }

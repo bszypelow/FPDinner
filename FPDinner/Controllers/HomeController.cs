@@ -30,7 +30,8 @@ namespace FPDinner.Controllers
                 var viewModel = new OrderingViewModel
                 {
                     Menu = menu,
-                    Order = order
+                    Order = order,
+                    TimeLimit = menu.Date.AddMinutes(1)
                 };
 
                 if (menu.Date > timeLimit)
@@ -93,12 +94,17 @@ namespace FPDinner.Controllers
 
                 var dinners = from d in session.Query<DinnerSummary, DinnerIndex>()
                               where d.MenuId == id
+                              orderby d.Dinner
                               select d;
                 var salads = from s in session.Query<SaladSummary, SaladIndex>()
                              where s.MenuId == id
+                             orderby s.Salad
                              select s;
-
-                return View(new SummaryViewModel { Dinners = dinners, Salads = salads });
+                var details = from o in session.Query<Order>()
+                              where o.MenuId == id
+                              orderby o.Person
+                              select o;
+                return View(new SummaryViewModel { Dinners = dinners, Salads = salads, Details = details });
             }
         }
 
@@ -107,7 +113,7 @@ namespace FPDinner.Controllers
         private static Menu GetMenu(IDocumentSession session)
         {
             var menu = session.Query<Menu>()
-                .Customize(q => q.WaitForNonStaleResults(TimeSpan.FromSeconds(2)))
+                .Customize(q => q.WaitForNonStaleResults(TimeSpan.FromSeconds(10)))
                 .OrderByDescending(m => m.Date)
                 .FirstOrDefault();
             return menu;
@@ -117,7 +123,7 @@ namespace FPDinner.Controllers
         {
             string user = User.Identity.Name;
 
-            var myOrders = from o in session.Query<Order>().Customize(q => q.WaitForNonStaleResults(TimeSpan.FromSeconds(2)))
+            var myOrders = from o in session.Query<Order>().Customize(q => q.WaitForNonStaleResults(TimeSpan.FromSeconds(10)))
                            where o.Person == user
                            where o.MenuId == menuId
                            select o;

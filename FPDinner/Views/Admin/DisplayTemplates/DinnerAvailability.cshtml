@@ -2,7 +2,9 @@
 <li id="@string.Format("dinner-item{0}", Model.Dinner.Id)">
 @using (Html.BeginCollectionItemFor<FPDinner.Models.AdminViewModel>(m => m.Dinners)) {
 	@Html.HiddenFor(m => m.Dinner.Id)
-	<label class="checkbox">@Html.CheckBoxFor(m => m.IsAvailable) @Model.Dinner.Name</label>
+	<label class="checkbox">@Html.CheckBoxFor(m => m.IsAvailable) @Model.Dinner.Name 
+		@if(Model.Dinner.HasPotatoes) { <span class="potatoes">+potatoes</span> }
+	</label>
 	@Ajax.ActionLink("Delete", "DeleteDinner", new { id = Model.Dinner.Id }, new AjaxOptions { OnSuccess = "$('#dinner-item" + Model.Dinner.Id + "').remove()" })
  }
 </li>

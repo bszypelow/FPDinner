@@ -19,9 +19,11 @@ namespace FPDinner.Controllers
             using (IDocumentSession session = MvcApplication.DB.OpenSession())
             {
                 var dinners = session.Query<Dinner>()
+                    .OrderBy(d => d.Name)
                     .ToList()
                     .Select(d => new DinnerAvailability { Dinner = d, IsAvailable = false });
                 var salads = session.Query<Salad>()
+                    .OrderBy(s => s.Name)
                     .ToList()
                     .Select(s => new SaladAvailability { Salad = s, IsAvailable = false });
 
@@ -107,10 +109,12 @@ namespace FPDinner.Controllers
                 var dinners = from d in session.Query<Dinner>().ToList()
                               join dd in model.Dinners on d.Id equals dd.Dinner.Id
                               where dd.IsAvailable == true
+                              orderby d.Name
                               select d;
 
                 var salads = from s in model.Salads
                              where s.IsAvailable
+                             orderby s.Salad
                              select s.Salad;
                 
                 var menu = new Menu

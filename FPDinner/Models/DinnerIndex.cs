@@ -15,20 +15,24 @@ namespace FPDinner.Models
                             {
                                 MenuId = o.MenuId,
                                 Dinner = o.Dinner.Dinner,
-                                Potatoes = o.Dinner.Potatoes,
-                                Notes = o.Dinner.Notes,
-                                Count = 1
+                                HasPotatoes = LoadDocument<Menu>(o.MenuId).Dinners.Where(d => d.Name == o.Dinner.Dinner).FirstOrDefault().HasPotatoes,
+                                Full = o.Dinner.Potatoes == Potatoes.Full ? 1 :0,
+                                Half = o.Dinner.Potatoes == Potatoes.Half ? 1 : 0,
+                                None = o.Dinner.Potatoes == Potatoes.None ? 1 : 0,
+                                Total = 1
                             };
 
             Reduce = results => from r in results
-                                group r by new { r.MenuId, r.Dinner, r.Potatoes, r.Notes } into g
+                                group r by new { r.MenuId, r.Dinner, r.HasPotatoes } into g
                                 select new DinnerSummary
                                 {
                                     MenuId = g.Key.MenuId,
                                     Dinner = g.Key.Dinner,
-                                    Potatoes = g.Key.Potatoes,
-                                    Notes = g.Key.Notes,
-                                    Count = g.Sum(o => o.Count)
+                                    HasPotatoes = g.Key.HasPotatoes,
+                                    Full = g.Sum(o => o.Full),
+                                    Half = g.Sum(o => o.Half),
+                                    None = g.Sum(o => o.None),
+                                    Total = g.Sum(o => o.Total)
                                 };
         }
     }

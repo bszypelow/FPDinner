@@ -20,14 +20,18 @@
         <div class="content-wrapper">
             <hgroup class="title">
                 <h1>@ViewBag.Title.</h1>
-                <h2>@Session["Message"]</h2>
             </hgroup>
             <p>
-                Now you can place your order.
+                Now you can place your order. Time left: <strong id="countdown"></strong>
             </p>
         </div>
     </section>
 }
+
+@if (Model.Order.Id != 0) { 
+    <div class="message-success">Your order has been placed. You can still change it.</div>
+}
+
 @using(Html.BeginForm("order1", "home")){
 @Html.HiddenFor(m => m.Order.Id)
 @Html.HiddenFor(m => m.Order.MenuId)
@@ -64,15 +68,16 @@
         var $dinner = $("#dinner");
         var $potatoesContainer = $("#potatoes-container");
         var $potatoes = $("#potatoes");
+        var $countdown = $("#countdown");
         
         var togglePotatoes = function () {
-        	if(potatoes[$dinner.val()]) {
-        		$potatoesContainer.show();
-        	}
-        	else {
-        		$potatoes.val("");
-        		$potatoesContainer.hide();
-        	}
+            if(potatoes[$dinner.val()]) {
+                $potatoesContainer.show();
+            }
+            else {
+                $potatoes.val("");
+                $potatoesContainer.hide();
+            }
         }
 
         var potatoes = {
@@ -86,6 +91,22 @@
         });
 
         togglePotatoes();
+
+        var countdown = function() {
+            var time = new Date(@((Model.TimeLimit.Ticks - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks)/10000)),
+                now = new Date(),
+                sec = (time - now) / 1000,
+                min = Math.floor(sec / 60);
+            if(sec >= 0) {
+                sec -= min * 60;
+                sec = Math.ceil(sec);
+                $countdown.text(min + ":" + (sec > 9 ? sec : "0" + sec));
+            }
+            else {
+                window.location.reload();
+            }
+        };
+        setInterval(countdown, 1000);
     });
 </script>
 }
