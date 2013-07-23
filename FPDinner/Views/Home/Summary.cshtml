@@ -83,10 +83,10 @@
             @item.Dinner.Notes
         </td>
         <td>
-            @item.Salads[0]
+            @if(item.Salads != null) { @item.Salads[0] }
         </td>
         <td>
-            @if (item.Salads.Length == 2) { @item.Salads[1] }
+            @if (item.Salads!= null && item.Salads.Length == 2) { @item.Salads[1] }
         </td>
     </tr>
 }

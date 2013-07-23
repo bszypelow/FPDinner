@@ -7,6 +7,7 @@ namespace FPDinner.Models
 		public int Id { get; set; }
 		public string Name { get; set; }
 		public bool HasPotatoes { get; set; }
+		public bool AvailableByDefault { get; set; }
 	}
 
 	public class Salad

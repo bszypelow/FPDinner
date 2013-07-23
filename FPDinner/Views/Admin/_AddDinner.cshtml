@@ -14,6 +14,9 @@
     <div class="editor-field">
         @Html.EditorFor(model => model.HasPotatoes) @Html.LabelFor(model => model.HasPotatoes, new { @class = "checkbox" })
     </div>
+    <div class="editor-field">
+        @Html.EditorFor(model => model.AvailableByDefault) @Html.LabelFor(model => model.AvailableByDefault, new { @class = "checkbox" })
+    </div>
 
     <p>
         <input type="submit" value="Add" />

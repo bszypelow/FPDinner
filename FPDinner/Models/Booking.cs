@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -19,12 +20,15 @@ namespace FPDinner.Models
         public string MenuId { get; set; }
         public string Person { get; set; }
         public OrderedDinner Dinner { get; set; }
+        [Required]
         public string[] Salads { get; set; }
     }
 
     public class OrderedDinner
     {
+        [Required]
         public string Dinner { get; set; }
+        [Required]
         public Potatoes Potatoes { get; set; }
         public string Notes { get; set; }
     }

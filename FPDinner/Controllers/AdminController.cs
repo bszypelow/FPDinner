@@ -21,7 +21,7 @@ namespace FPDinner.Controllers
                 var dinners = session.Query<Dinner>()
                     .OrderBy(d => d.Name)
                     .ToList()
-                    .Select(d => new DinnerAvailability { Dinner = d, IsAvailable = false });
+                    .Select(d => new DinnerAvailability { Dinner = d, IsAvailable = d.AvailableByDefault });
                 var salads = session.Query<Salad>()
                     .OrderBy(s => s.Name)
                     .ToList()
@@ -52,7 +52,7 @@ namespace FPDinner.Controllers
                 }
             }
 
-            return PartialView("_AddedDinner", new DinnerAvailability { Dinner = model, IsAvailable = false });
+            return PartialView("_AddedDinner", new DinnerAvailability { Dinner = model, IsAvailable = model.AvailableByDefault });
         }
 
         //
@@ -114,7 +114,7 @@ namespace FPDinner.Controllers
 
                 var salads = from s in model.Salads
                              where s.IsAvailable
-                             orderby s.Salad
+                             orderby s.Salad.Name
                              select s.Salad;
                 
                 var menu = new Menu

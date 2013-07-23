@@ -23,7 +23,7 @@ namespace FPDinner.Controllers
                 }
 
                 string menuId = "menus/" + menu.Id.ToString();
-                DateTime timeLimit = DateTime.UtcNow.AddMinutes(-1);
+                DateTime timeLimit = DateTime.UtcNow.AddMinutes(-15);
 
                 var order = GetOrCreateOrder(session, menuId);
 
@@ -31,7 +31,7 @@ namespace FPDinner.Controllers
                 {
                     Menu = menu,
                     Order = order,
-                    TimeLimit = menu.Date.AddMinutes(1)
+                    TimeLimit = menu.Date.AddMinutes(15)
                 };
 
                 if (menu.Date > timeLimit)
@@ -104,6 +104,7 @@ namespace FPDinner.Controllers
                               where o.MenuId == id
                               orderby o.Person
                               select o;
+
                 return View(new SummaryViewModel { Dinners = dinners, Salads = salads, Details = details });
             }
         }
