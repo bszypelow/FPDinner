@@ -9,9 +9,9 @@
         new SelectListItem { Text = Potatoes.Half.ToString(), Value = Potatoes.Half.ToString() },
         new SelectListItem { Text = Potatoes.None.ToString(), Value = Potatoes.None.ToString() }
     };
-    var dinnersList = new SelectList(Model.Menu.Dinners, "Name", "Name");
-    var salads = new List<Salad> { null }.Concat(Model.Menu.Salads);
-    var saladList = new SelectList(salads, "Name", "Name", Model.Order.Salads[0]);
+    var dinnersList = new SelectList(Model.Menu.Dinners, "Id", "Name");
+    var salads = new List<Salad> { new Salad { Name = "<none>"} }.Concat(Model.Menu.Salads);
+    var saladList = new SelectList(salads, "Id", "Name", Model.Order.SaladIds[0]);
     
     
 }
@@ -35,10 +35,11 @@
 @using(Html.BeginForm("order1", "home")){
 @Html.HiddenFor(m => m.Order.Id)
 @Html.HiddenFor(m => m.Order.MenuId)
+@Html.ValidationSummary()
 <ol class="round">
     <li class="one">
-        @Html.LabelFor(m => m.Order.Dinner.Dinner)
-        @Html.DropDownListFor(m => m.Order.Dinner.Dinner, dinnersList, new { id = "dinner" })
+        @Html.LabelFor(m => m.Order.Dinner.DinnerId)
+        @Html.DropDownListFor(m => m.Order.Dinner.DinnerId, dinnersList, new { id = "dinner" })
 
         <div id="potatoes-container">
             @Html.LabelFor(m => m.Order.Dinner.Potatoes)
@@ -48,13 +49,12 @@
         @Html.LabelFor(m => m.Order.Dinner.Notes)
         @Html.EditorFor(m => m.Order.Dinner.Notes)
 
-        
     </li>
 
     <li class="two">
-        @Html.LabelFor(m => m.Order.Salads[0], "Salad")
-        @Html.DropDownListFor(m => m.Order.Salads[0], saladList)
-        @Html.HiddenFor(mbox => mbox.Order.Salads[1])
+        @Html.LabelFor(m => m.Order.SaladIds[0], "Salad")
+        @Html.DropDownListFor(m => m.Order.SaladIds[0], saladList)
+        @Html.HiddenFor(mbox => mbox.Order.SaladIds[1])
     </li>
 
     <li class="three">
@@ -71,7 +71,7 @@
         var $countdown = $("#countdown");
         
         var togglePotatoes = function () {
-            if(potatoes[$dinner.val()]) {
+        	if(potatoes["dinners/" + $dinner.val()]) {
                 $potatoesContainer.show();
             }
             else {
@@ -82,7 +82,7 @@
 
         var potatoes = {
             @foreach(var d in Model.Menu.Dinners) { 
-                @: "@d.Name": @(d.HasPotatoes.ToString().ToLower()),
+                @: "dinners/@d.Id": @(d.HasPotatoes.ToString().ToLower()),
             }
         }
 

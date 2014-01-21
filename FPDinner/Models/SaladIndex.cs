@@ -12,12 +12,12 @@ namespace FPDinner.Models
         public SaladIndex()
         {
             Map = orders => from o in orders
-                            from s in o.Salads
-                            where !string.IsNullOrEmpty(s)
+                            from s in o.SaladIds
+                            where s != 0
                             select new SaladSummary
                             {
                                 MenuId = o.MenuId,
-                                Salad = s,
+                                Salad = LoadDocument<Salad>("salads/" + s).Name,
                                 Count = 1
                             };
 

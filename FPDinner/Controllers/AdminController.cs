@@ -112,10 +112,11 @@ namespace FPDinner.Controllers
                               orderby d.Name
                               select d;
 
-                var salads = from s in model.Salads
-                             where s.IsAvailable
-                             orderby s.Salad.Name
-                             select s.Salad;
+                var salads = from s in session.Query<Salad>().ToList()
+                              join ss in model.Salads on s.Id equals ss.Salad.Id
+                              where ss.IsAvailable == true
+                              orderby s.Name
+                              select s;
                 
                 var menu = new Menu
                 {

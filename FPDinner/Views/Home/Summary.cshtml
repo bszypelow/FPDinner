@@ -74,19 +74,19 @@
             @item.Person
         </td>
         <td>
-            @item.Dinner.Dinner
+            @item.Dinner
         </td>
         <td>
-            @(Enum.GetName(typeof(FPDinner.Models.Potatoes), item.Dinner.Potatoes))
+            @Enum.GetName(typeof(FPDinner.Models.Potatoes), item.Potatoes)
         </td>
         <td>
-            @item.Dinner.Notes
+            @item.Notes
         </td>
         <td>
-            @if(item.Salads != null) { @item.Salads[0] }
+            @item.Salad1
         </td>
         <td>
-            @if (item.Salads!= null && item.Salads.Length == 2) { @item.Salads[1] }
+            @item.Salad2
         </td>
     </tr>
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,6 +13,8 @@ namespace FPDinner.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private readonly int TimeLimit = int.Parse(ConfigurationManager.AppSettings["TimeLimit"]);
+
         public ActionResult Index()
         {
             using (var session = MvcApplication.DB.OpenSession())
@@ -23,7 +26,7 @@ namespace FPDinner.Controllers
                 }
 
                 string menuId = "menus/" + menu.Id.ToString();
-                DateTime timeLimit = DateTime.UtcNow.AddMinutes(-15);
+                DateTime timeLimit = DateTime.UtcNow.AddMinutes(-TimeLimit);
 
                 var order = GetOrCreateOrder(session, menuId);
 
@@ -31,7 +34,7 @@ namespace FPDinner.Controllers
                 {
                     Menu = menu,
                     Order = order,
-                    TimeLimit = menu.Date.AddMinutes(15)
+                    TimeLimit = menu.Date.AddMinutes(TimeLimit)
                 };
 
                 if (menu.Date > timeLimit)
@@ -53,18 +56,28 @@ namespace FPDinner.Controllers
         {
             using (var session = MvcApplication.DB.OpenSession())
             {
-                var order = model.Order;
-                order.Person = User.Identity.Name;
+                model.Menu = GetMenu(session);
+                model.Order.Person = User.Identity.Name;
+                model.TimeLimit = model.Menu.Date.AddMinutes(TimeLimit);
 
-                if (TryValidateModel(order))
+				ModelState.Clear();
+                if (TryValidateModel(model))
                 {
+                    if (!model.Menu.Dinners.Single(d => d.Id == model.Order.Dinner.DinnerId).HasPotatoes)
+                    {
+                        model.Order.Dinner.Potatoes = Potatoes.None;
+                    }
+
                     session.Store(model.Order);
                     session.SaveChanges();
+
+                    Session["Message"] = " Order placed.";
+
+                    return RedirectToAction("index");
                 }
             }
 
-            Session["Message"] = " Order placed.";
-            return RedirectToAction("index");
+            return View(model);
         }
 
         [HttpPost]
@@ -73,9 +86,13 @@ namespace FPDinner.Controllers
             using (var session = MvcApplication.DB.OpenSession())
             {
                 var order = session.Load<Order>("orders/" + model.Order.Id);
-                order.Salads[1] = model.Order.Salads[1];
+                order.SaladIds[1] = model.Order.SaladIds[1];
 
-                if (TryValidateModel(order))
+                if (CountMissingSalads(session, order.MenuId) == 0)
+                {
+                    Session["Message"] = "Someone was faster than you.";
+                }
+                else if (TryValidateModel(order))
                 {
                     session.Store(order);
                     session.SaveChanges();
@@ -100,7 +117,7 @@ namespace FPDinner.Controllers
                              where s.MenuId == id
                              orderby s.Salad
                              select s;
-                var details = from o in session.Query<Order>()
+                var details = from o in session.Query<Order>().TransformWith<DetailsIndex, Details>()
                               where o.MenuId == id
                               orderby o.Person
                               select o;
@@ -133,7 +150,7 @@ namespace FPDinner.Controllers
             {
                 MenuId = menuId,
                 Dinner = new OrderedDinner(),
-                Salads = new string[] { string.Empty, string.Empty }
+                SaladIds = new int[] { 0, 0 }
             };
 
             return order;

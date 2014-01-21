@@ -14,8 +14,8 @@ namespace FPDinner.Models
                             select new DinnerSummary
                             {
                                 MenuId = o.MenuId,
-                                Dinner = o.Dinner.Dinner,
-                                HasPotatoes = LoadDocument<Menu>(o.MenuId).Dinners.Where(d => d.Name == o.Dinner.Dinner).FirstOrDefault().HasPotatoes,
+								Dinner = LoadDocument<Dinner>("dinners/" + o.Dinner.DinnerId).Name,
+								HasPotatoes = LoadDocument<Menu>(o.MenuId).Dinners.Where(d => d.Id == o.Dinner.DinnerId).FirstOrDefault().HasPotatoes,
                                 Full = o.Dinner.Potatoes == Potatoes.Full ? 1 :0,
                                 Half = o.Dinner.Potatoes == Potatoes.Half ? 1 : 0,
                                 None = o.Dinner.Potatoes == Potatoes.None ? 1 : 0,

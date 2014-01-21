@@ -4,7 +4,7 @@
 @{
     ViewBag.Title = "Dinner";
     var salads = new List<Salad> { null }.Concat(Model.Menu.Salads);
-    var saladList = new SelectList(salads, "Name", "Name", Model.Order.Salads[1]);
+	var saladList = new SelectList(salads, "Id", "Name", Model.Order.SaladIds[1]);
 }
 @section featured {
     <section class="featured">
@@ -25,9 +25,9 @@
 <ol class="round">
 
     <li class="one">
-        @Html.HiddenFor(m=> m.Order.Salads[0])
-        @Html.LabelFor(m => m.Order.Salads[1], "Salad")
-        @Html.DropDownListFor(m => m.Order.Salads[1], saladList)
+        @Html.HiddenFor(m=> m.Order.SaladIds[0])
+        @Html.LabelFor(m => m.Order.SaladIds[1], "Salad")
+        @Html.DropDownListFor(m => m.Order.SaladIds[1], saladList)
     </li>
 
     <li class="two">

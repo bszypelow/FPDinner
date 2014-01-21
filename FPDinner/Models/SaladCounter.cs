@@ -17,8 +17,8 @@ namespace FPDinner.Models
         public SaladCounter()
         {
             Map = orders => from o in orders
-                            from s in o.Salads
-                            where !string.IsNullOrEmpty(s)
+                            from s in o.SaladIds
+                            where s != 0
                             select new Result
                             {
                                 MenuId = o.MenuId,
