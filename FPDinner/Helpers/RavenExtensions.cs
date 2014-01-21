@@ -7,9 +7,9 @@ namespace FPDinner.Helpers
 {
     public static class RavenExtensions
     {
-        public static T FirstOrEmpty<T>(this IQueryable<T> @this) where T : class
+        public static T FirstOrEmpty<T>(this IQueryable<T> @this) where T : class, new()
         {
-            return @this.FirstOrDefault() ?? default(T);
+            return @this.FirstOrDefault() ?? new T();
         }
     }
 }

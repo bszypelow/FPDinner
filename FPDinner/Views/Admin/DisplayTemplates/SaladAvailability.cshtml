@@ -3,6 +3,6 @@
 @using (Html.BeginCollectionItemFor<FPDinner.Models.AdminViewModel>(m => m.Salads)) {
 	@Html.HiddenFor(m => m.Salad.Id)
 	<label class="checkbox">@Html.CheckBoxFor(m => m.IsAvailable) @Model.Salad.Name</label>
-	@Ajax.ActionLink("Delete", "DeleteSalad", new { id = Model.Salad.Id }, new AjaxOptions { OnSuccess = "$('#salad-item" + Model.Salad.Id + "').remove()" })
+	@Ajax.ActionLink("[-]", "DeleteSalad", new { id = Model.Salad.Id }, new AjaxOptions { OnSuccess = "$('#salad-item" + Model.Salad.Id + "').remove()" }, new { @class = "delete" })
 }
 </li>

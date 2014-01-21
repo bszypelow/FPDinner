@@ -5,6 +5,6 @@
 	<label class="checkbox">@Html.CheckBoxFor(m => m.IsAvailable) @Model.Dinner.Name 
 		@if(Model.Dinner.HasPotatoes) { <span class="potatoes">+potatoes</span> }
 	</label>
-	@Ajax.ActionLink("Delete", "DeleteDinner", new { id = Model.Dinner.Id }, new AjaxOptions { OnSuccess = "$('#dinner-item" + Model.Dinner.Id + "').remove()" })
+	@Ajax.ActionLink("[-]", "DeleteDinner", new { id = Model.Dinner.Id }, new AjaxOptions { OnSuccess = "$('#dinner-item" + Model.Dinner.Id + "').remove()" }, new { @class = "delete" })
  }
 </li>

@@ -134,7 +134,7 @@ namespace FPDinner.Controllers
         private static Menu GetMenu(IDocumentSession session)
         {
             var menu = session.Query<Menu>()
-                .Customize(q => q.WaitForNonStaleResults(TimeSpan.FromSeconds(10)))
+                .Customize(q => q.WaitForNonStaleResults(TimeSpan.FromSeconds(15)))
                 .OrderByDescending(m => m.Date)
                 .FirstOrDefault();
             return menu;
@@ -144,7 +144,7 @@ namespace FPDinner.Controllers
         {
             string user = User.Identity.Name;
 
-            var myOrders = from o in session.Query<Order>().Customize(q => q.WaitForNonStaleResults(TimeSpan.FromSeconds(10)))
+            var myOrders = from o in session.Query<Order>().Customize(q => q.WaitForNonStaleResults(TimeSpan.FromSeconds(15)))
                            where o.Person == user
                            where o.MenuId == menuId
                            select o;

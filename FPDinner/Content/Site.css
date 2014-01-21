@@ -95,7 +95,7 @@ h5, h6 {
 ----------------------------------------------------------*/
 .content-wrapper {
     margin: 0 auto;
-    max-width: 960px;
+    max-width: 1200px;
 }
 
 #body {
@@ -116,7 +116,7 @@ h5, h6 {
 
     .column {
         float:left;
-        width: 465px;
+        width: 600px;
     }
 
 header .content-wrapper {
@@ -531,16 +531,56 @@ input[type="checkbox"].input-validation-error {
     display: none;
 }
 
+
+/* admin */
 .start-booking {
     clear: both;
     background: #7ac0da;
     padding: 0 10px;
 }
 
+
+
+.food-menu ul {
+    padding: 0;
+    margin-right: 10px;
+    height: 700px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+.food-menu li {
+    list-style: none;
+    margin: 0;
+    height: 45px;
+    padding-left: 10px;
+}
+.food-menu li:nth-child(2n) {
+    background-color: #fff;
+}
+.food-menu li:hover {
+    background-color: #a4d4e6
+}
+
+.food-menu label {
+    display: inline-block;
+    width: 520px;
+    line-height: 45px;
+}
+
 .potatoes {
     color: #999;
     font-size: 0.85em;
+    float:right;
+    line-height: 45px;
 }
+
+.delete {
+    float: right;
+    color: maroon !important;
+    height: 45px;
+    line-height: 45px;
+}
+
 /* tables
 ----------------------------------------------------------*/
 table {
@@ -601,7 +641,6 @@ td {
 tr.pager td {
     padding: 0 0.25em 0 0;
 }
-
 
 /********************
 *   Mobile Styles   *

@@ -1,12 +1,12 @@
 ﻿@model FPDinner.Models.AdminViewModel
 
 @{
-    ViewBag.Title = "Index";
+	ViewBag.Title = "Index";
 }
 
 <section>
 @using (Html.BeginForm("StartBooking", "Admin")) { 
-	<section class="column">
+	<section class="column food-menu">
 		<h2>Dinners</h2>
 
 		<ul id="dinners">
@@ -14,17 +14,18 @@
 		</ul>
 	</section>
 
-	<section  class="column">
+	<section class="column food-menu">
 		<h2>Salads</h2>
 		<ul id="salads">
-			@foreach(var s in Model.Salads) { @Html.DisplayFor(m => s, null, "") }
+			@foreach (var s in Model.Salads)
+			{ @Html.DisplayFor(m => s, null, "") }
 		</ul>
 	</section>
 
-	<p class="start-booking">
+		<p class="start-booking">
 		Mark what is available today and <input type="submit" value="start booking" />
 	</p>
- }
+}
 </section>
 
 <section>
