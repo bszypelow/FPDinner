@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using FPDinner.Helpers;
 using FPDinner.Models;
 using Raven.Client;
-using Raven.Database.Linq;
-using Raven.Database.Queries;
+using System;
+using System.Configuration;
+using System.Linq;
+using System.Web.Mvc;
+
 namespace FPDinner.Controllers
 {
     [Authorize]
@@ -60,7 +58,7 @@ namespace FPDinner.Controllers
                 model.Order.Person = User.Identity.Name;
                 model.TimeLimit = model.Menu.Date.AddMinutes(TimeLimit);
 
-				ModelState.Clear();
+                ModelState.Clear();
                 if (TryValidateModel(model))
                 {
                     if (!model.Menu.Dinners.Single(d => d.Id == model.Order.Dinner.DinnerId).HasPotatoes)
@@ -85,14 +83,19 @@ namespace FPDinner.Controllers
         {
             using (var session = MvcApplication.DB.OpenSession())
             {
+                model.Menu = GetMenu(session);
                 var order = session.Load<Order>("orders/" + model.Order.Id);
                 order.SaladIds[1] = model.Order.SaladIds[1];
+                model.Order = order;
 
                 if (CountMissingSalads(session, order.MenuId) == 0)
                 {
                     Session["Message"] = "Someone was faster than you.";
+                    return RedirectToAction("index");
                 }
-                else if (TryValidateModel(order))
+
+                ModelState.Clear();
+                if (TryValidateModel(model))
                 {
                     session.Store(order);
                     session.SaveChanges();
@@ -161,10 +164,11 @@ namespace FPDinner.Controllers
             var orders = from o in session.Query<Order>()
                          where o.MenuId == menuId
                          select o;
-            var saladsCount = from c in session.Query<SaladCounter.Result, SaladCounter>()
+            var salads = from c in session.Query<SaladCounter.Result, SaladCounter>()
                               where c.MenuId == menuId
-                              select c.SaladCount;
-            var missingSalads = orders.Count() - saladsCount.FirstOrDefault();
+                              select c;
+            var saladCount = salads.FirstOrEmpty().SaladCount;
+            var missingSalads = orders.Count() - saladCount;
 
             return missingSalads;
         }

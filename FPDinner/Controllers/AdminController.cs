@@ -19,11 +19,13 @@ namespace FPDinner.Controllers
             using (IDocumentSession session = MvcApplication.DB.OpenSession())
             {
                 var dinners = session.Query<Dinner>()
-                    .OrderBy(d => d.Name)
+                    .OrderBy(d => d.Provider)
+                    .ThenBy(d => d.Name)
                     .ToList()
                     .Select(d => new DinnerAvailability { Dinner = d, IsAvailable = d.AvailableByDefault });
                 var salads = session.Query<Salad>()
-                    .OrderBy(s => s.Name)
+                    .OrderBy(d => d.Provider)
+                    .ThenBy(d => d.Name)
                     .ToList()
                     .Select(s => new SaladAvailability { Salad = s, IsAvailable = false });
 

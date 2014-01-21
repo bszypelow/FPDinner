@@ -5,6 +5,7 @@ namespace FPDinner.Models
 	public class Dinner
 	{
 		public int Id { get; set; }
+		public string Provider { get; set; }
 		public string Name { get; set; }
 		public bool HasPotatoes { get; set; }
 		public bool AvailableByDefault { get; set; }
@@ -13,6 +14,7 @@ namespace FPDinner.Models
 	public class Salad
 	{
 		public int Id { get; set; }
+		public string Provider { get; set; }
 		public string Name { get; set; }
 	}
 

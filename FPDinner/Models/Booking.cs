@@ -46,7 +46,7 @@ namespace FPDinner.Models
     {
         public Menu Menu { get; set; }
         public Order Order { get; set; }
-        public DateTime TimeLimit { get; set; }
+        public DateTime? TimeLimit { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -68,7 +68,7 @@ namespace FPDinner.Models
                 }
             }
 
-            if (TimeLimit < DateTime.UtcNow)
+            if (TimeLimit.HasValue && TimeLimit < DateTime.UtcNow)
             {
                 yield return new ValidationResult("Time elapsed");
             }
