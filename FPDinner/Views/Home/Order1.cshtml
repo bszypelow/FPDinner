@@ -12,8 +12,6 @@
     var dinnersList = new SelectList(Model.Menu.Dinners, "Id", "Name");
     var salads = new List<Salad> { new Salad { Name = "<none>"} }.Concat(Model.Menu.Salads);
     var saladList = new SelectList(salads, "Id", "Name", Model.Order.SaladIds[0]);
-    
-    
 }
 @section featured {
     <section class="featured">
@@ -71,8 +69,9 @@
         var $countdown = $("#countdown");
         
         var togglePotatoes = function () {
-        	if(potatoes["dinners/" + $dinner.val()]) {
+            if(potatoes["dinners/" + $dinner.val()]) {
                 $potatoesContainer.show();
+                $potatoes.val("Full");
             }
             else {
                 $potatoes.val("");

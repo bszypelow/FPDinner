@@ -4,91 +4,99 @@
     ViewBag.Title = "Summary";
 }
 
-<h2>Summary</h2>
+<section>
+    <h2>Summary</h2>
 
-<table>
-    <tr>
-        <th>Dinner</th>
-        <th>Full</th>
-        <th>Half</th>
-        <th>None</th>
-        <th>Total</th>
-    </tr>
+    <table>
+        <tr>
+            <th>Dinner</th>
+            <th>Full</th>
+            <th>Half</th>
+            <th>None</th>
+            <th>Total</th>
+        </tr>
 
-@foreach (var item in Model.Dinners) {
-    <tr>
-        <td>
-            @item.Dinner
-        </td>
-        <td>
-            @if (item.HasPotatoes) { @item.Full }
-        </td>
-        <td>
-            @if (item.HasPotatoes) { @item.Half }
-        </td>
-        <td>
-            @if (item.HasPotatoes) { @item.None }
-        </td>
-        <td>
-            <strong>@item.Total</strong>
-        </td>
-    </tr>
-}
+        @foreach (var item in Model.Dinners)
+        {
+            <tr>
+                <td>
+                    @item.Dinner
+                </td>
+                <td>
+                    @if (item.HasPotatoes)
+                    { @item.Full }
+                </td>
+                <td>
+                    @if (item.HasPotatoes)
+                    { @item.Half }
+                </td>
+                <td>
+                    @if (item.HasPotatoes)
+                    { @item.None }
+                </td>
+                <td>
+                    <strong>@item.Total</strong>
+                </td>
+            </tr>
+        }
 
-</table>
+    </table>
 
-<table>
-    <tr>
-        <th>Salad</th>
-        <th>Count</th>
-    </tr>
+    <table>
+        <tr>
+            <th>Salad</th>
+            <th>Count</th>
+        </tr>
 
-@foreach (var item in Model.Salads) {
-    <tr>
-        <td>
-            @item.Salad
-        </td>
-        <td>
-            @item.Count
-        </td>
-    </tr>
-}
+        @foreach (var item in Model.Salads)
+        {
+            <tr>
+                <td>
+                    @item.Salad
+                </td>
+                <td>
+                    @item.Count
+                </td>
+            </tr>
+        }
 
-</table>
+    </table>
+</section>
+<section>
+    <h2>Details</h2>
 
-<h2>Details</h2>
+    <table>
+        <tr>
+            <th>Person</th>
+            <th>Dinner</th>
+            <th>Potatoes</th>
+            <th>Notes</th>
+            <th>Salad 1</th>
+            <th>Salad 2</th>
+        </tr>
 
-<table>
-    <tr>
-        <th>Person</th>
-        <th>Dinner</th>
-        <th>Potatoes</th>
-        <th>Notes</th>
-        <th>Salad 1</th>
-        <th>Salad 2</th>
-    </tr>
-
-@foreach (var item in Model.Details) {
-    <tr>
-        <td>
-            @item.Person
-        </td>
-        <td>
-            @item.Dinner
-        </td>
-        <td>
-            @Enum.GetName(typeof(FPDinner.Models.Potatoes), item.Potatoes)
-        </td>
-        <td>
-            @item.Notes
-        </td>
-        <td>
-            @item.Salad1
-        </td>
-        <td>
-            @item.Salad2
-        </td>
-    </tr>
-}
-
-</table>
+        @foreach (var item in Model.Details)
+        {
+            <tr>
+                <td>
+                    @item.Person
+                </td>
+                <td>
+                    @item.Dinner
+                </td>
+                <td>
+                    @Enum.GetName(typeof(FPDinner.Models.Potatoes), item.Potatoes)
+                </td>
+                <td>
+                    @item.Notes
+                </td>
+                <td>
+                    @item.Salad1
+                </td>
+                <td>
+                    @item.Salad2
+                </td>
+            </tr>
+        }
+    </table>
+</section>
